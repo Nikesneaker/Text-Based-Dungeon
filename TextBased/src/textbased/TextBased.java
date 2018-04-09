@@ -23,6 +23,7 @@ public class TextBased {
      */
     
     //<editor-fold desc="Variables">
+        //something
 
         //<editor-fold desc="SystemObjects">
         static Scanner in = new Scanner(System.in);
