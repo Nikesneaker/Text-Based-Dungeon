@@ -5,18 +5,20 @@
  */
 package textbased;
 
+
 import static java.lang.Integer.parseInt;
 import static java.lang.Math.max;
 import static java.lang.Math.pow;
 import static java.lang.Math.round;
 import java.util.Random;
 import java.util.Scanner;
-
+import package.Enemy;
 /**
  *
  * @author Caleb
  */
 public class TextBased {
+
 
     /**
      * @param args the command line arguments
@@ -99,7 +101,8 @@ public class TextBased {
 
         static boolean running = true;
         //</editor-fold>
-        
+
+
     public static void chooseDifficulty() {
         boolean difficultyChosen = false;
         while(!difficultyChosen) {
@@ -162,9 +165,85 @@ public class TextBased {
 
         }
         //</editor-fold>
-        
+        experienceNeeded = experienceNeededMultiplier; //300*2^(level-1)
     }
-    
+
+    public static int chooseFightAspect() {
+        int aspect;
+        boolean fightAspectChosen = false;
+        while(!fightAspectChosen) {
+            System.out.println("# What aspect would you like to enter for this fight? #");
+            if(magicStaffOwned) {
+                System.out.println("# 4. Lion-Bear form (take less damage, deal massive amounts of damage) #");
+                System.out.println("# 5. Owl-Lion form (massively increased damage, more potent spellcasting) #");
+                System.out.println("# 6. Owl-Bear form (more potent spellcasting, take less damage, deal slightly more damage) #");
+            }
+            else{
+                System.out.println("# 1. Bear form (take less damage, deal slightly more damage) #");
+                System.out.println("# 2. Lion form (massively increased damage) #");
+                System.out.println("# 3. Owl form (more potent spellcasting) #");
+            }
+
+
+            String aspectInput = in.nextLine();
+            if(null == aspectInput){
+                System.out.println("\tInvalid command!");
+            }
+            else switch (aspectInput) {
+                case "1":
+                    fightAspectChosen = true;
+                    aspect = parseInt(aspectInput);
+                    break;
+                case "2":
+                    fightAspectChosen = true;
+                    aspect = parseInt(aspectInput);
+                    break;
+                case "3":
+                    fightAspectChosen = true;
+                    aspect = parseInt(aspectInput);
+                    break;
+                case "4":
+                    fightAspectChosen = true;
+                    aspect = parseInt(aspectInput);
+                    break;
+                case "5":
+                    fightAspectChosen = true;
+                    aspect = parseInt(aspectInput);
+                    break;
+                case "6":
+                    fightAspectChosen = true;
+                    aspect = parseInt(aspectInput);
+                    break;
+                default:
+                    System.out.println("\tInvalid command!");
+                    break;
+            }
+
+        }
+        return aspect;
+    }
+
+    public static void drinkPotion() {
+        if (numHealthPotions > 0) {
+            if(currentHealth == maxHealth)
+            {
+                System.out.println("\tYou are at full health! Your potion will do nothing.");
+            }
+            else {
+                currentHealth += healthPotionHealAmount;
+                if (currentHealth > maxHealth) {
+                    currentHealth = maxHealth;
+                }
+                numHealthPotions--;
+                System.out.println("\t> You drink a health potion, healing yourself for " + healthPotionHealAmount + "."
+                        + "\n\t> You now have " + currentHealth + " HP."
+                        + "\n\t> You have " + numHealthPotions + " health potions left.");
+            }
+
+        } else {
+            System.out.println("\t> You have no health potions left! Defeat enemies for a chance to get a health potion!");
+        }
+    }
     
     public static int fight(int enemyLevel, int enemyHealth, String enemy, int tempDodgeBlockChance) {
         boolean mageArmorOn = false;
@@ -177,61 +256,13 @@ public class TextBased {
          //<editor-fold desc="ChoosingAspect">
         if(playerClass==5)
         {
-            boolean fightAspectChosen = false;
-            while(!fightAspectChosen) {
-                System.out.println("# What aspect would you like to enter for this fight? #");
-                if(magicStaffOwned) {
-                    System.out.println("# 4. Lion-Bear form (take less damage, deal massive amounts of damage) #");
-                    System.out.println("# 5. Owl-Lion form (massively increased damage, more potent spellcasting) #");
-                    System.out.println("# 6. Owl-Bear form (more potent spellcasting, take less damage, deal slightly more damage) #");
-                }
-                else{
-                    System.out.println("# 1. Bear form (take less damage, deal slightly more damage) #");
-                    System.out.println("# 2. Lion form (massively increased damage) #");
-                    System.out.println("# 3. Owl form (more potent spellcasting) #");
-                }
-                
-                
-                String aspectInput = in.nextLine();
-                if(null == aspectInput){
-                    System.out.println("\tInvalid command!");
-                }
-                else switch (aspectInput) {
-                    case "1":
-                        fightAspectChosen = true;
-                        aspect = parseInt(aspectInput);
-                        break;
-                    case "2":
-                        fightAspectChosen = true;
-                        aspect = parseInt(aspectInput);
-                        break;
-                    case "3":
-                        fightAspectChosen = true;
-                        aspect = parseInt(aspectInput);
-                        break;
-                    case "4":
-                        fightAspectChosen = true;
-                        aspect = parseInt(aspectInput);
-                        break;
-                    case "5":
-                        fightAspectChosen = true;
-                        aspect = parseInt(aspectInput);
-                        break;
-                    case "6":
-                        fightAspectChosen = true;
-                        aspect = parseInt(aspectInput);
-                        break;
-                    default:
-                        System.out.println("\tInvalid command!");
-                        break;
-                }
-            
-            }
+            aspect = chooseFightAspect();
         }
         //</editor-fold>
         
         FIGHT:
         while (enemyHealth > 0) {
+            //damage/healing over time method
             //<editor-fold desc="BurningEnemy">
             if(enemyBurning)
             {
@@ -260,6 +291,8 @@ public class TextBased {
                 System.out.println("\t>You are rejuvinating, and heal for " + damageHealed + " damage, up to a max of " + maxHealth + ".");
             }
             //</editor-fold>
+
+            //options method
             //<editor-fold desc="Menu">
             System.out.println("\tRound: " + roundOfBattle);
             System.out.println("\tYour HP: " + currentHealth);
@@ -282,6 +315,7 @@ public class TextBased {
             String input = in.nextLine();
             switch (input) {
                 case "1":
+                    //attack method
                     //<editor-fold desc="Attack">
                     int damageDealt = (int)round(rand.nextGaussian()*(attackDamage/6)+(attackDamage/2));
                     int damageTaken = (int)round(rand.nextGaussian()*(enemyAttackDamage/6)+(enemyAttackDamage/2));
@@ -389,6 +423,7 @@ public class TextBased {
 
                     //<editor-fold desc="PlayerDeath">
                     if (currentHealth < 1) {
+                        //die method
                         System.out.println("\t>You have taken too much damage, you are too weak to go on!");
                         break FIGHT;
                     }
@@ -397,29 +432,13 @@ public class TextBased {
                     break;
                     //</editor-fold>
                 case "2":
+                    //potion method
                     //<editor-fold desc="Potion">
-                    if (numHealthPotions > 0) {
-                        if(currentHealth == maxHealth)
-                        {
-                            System.out.println("\tYou are at full health! Your potion will do nothing.");
-                        }
-                        else {
-                            currentHealth += healthPotionHealAmount;
-                            if (currentHealth > maxHealth) {
-                                currentHealth = maxHealth;
-                            }
-                            numHealthPotions--;
-                            System.out.println("\t> You drink a health potion, healing yourself for " + healthPotionHealAmount + "."
-                                    + "\n\t> You now have " + currentHealth + " HP."
-                                    + "\n\t> You have " + numHealthPotions + " health potions left.");
-                        }
-
-                    } else {
-                        System.out.println("\t> You have no health potions left! Defeat enemies for a chance to get a health potion!");
-                    }
+                    drinkPotion();
                     break;
                     //</editor-fold>
                 case "3":
+                    //spell method
                     //<editor-fold desc="Spell">
                     if(level <3) {
                         System.out.println("\t You don't know any spells yet!");
@@ -1333,6 +1352,7 @@ public class TextBased {
                     }
                     //</editor-fold>
                 case "4":
+                    //escape method
                     //<editor-fold desc="EscapeRope">
                     if(escapeRopes == 0)
                     {
@@ -1353,6 +1373,132 @@ public class TextBased {
         }
         return enemyHealth;
     }
+
+    public static int pickClass() {
+        int playerClass;
+        System.out.println(" # You have reached a level of competency that allows you to choose a class. Choosing one of the below classes locks provides a short description of the class, and is not final. #");
+        System.out.println("\t1. Warrior");
+        System.out.println("\t2. Wizard");
+        System.out.println("\t3. Rogue");
+        System.out.println("\t4. Archer");
+        System.out.println("\t5. Druid");
+        String input = in.nextLine();
+        switch (input) {
+            case "1":
+                System.out.println("\tThe Warrior excels in hand-to hand combat." +
+                        "\n\tThe Warrior gains extra maximum health and attack damage at every level up. Health potions also heal for more." +
+                        "\n\tThe Warrior also has a chance to completely block attacks." +
+                        "\n\tThe Warrior gains access to Lethal Strike (damaging spell), Shield Wall (increases block chance), and Bloodthirst (deal massive damage, take extra damage).");
+                System.out.println("# Would you like to choose the Warrior? #\n1. Yes \n2. Back");
+                String input2 = in.nextLine();
+                switch (input2) {
+                    case "1":
+                        playerClass=1;
+                        dodgeBlockChance+=10;
+                        maxSpellSlots = 2;
+                        System.out.println("--------------------------------------------------------------------------------------------------");
+                        break;
+                    case "2":
+                        System.out.println("--------------------------------------------------------------------------------------------------");
+                        break;
+                    default:
+                        System.out.println("\tInvalid command!");
+                        break;
+                }
+                break;
+            case "2":
+                System.out.println("\tThe Wizard is a master of the magical arts." +
+                        "\n\tHealth potions heal for twice as much as usual, but the wizard gains less maximum health per level." +
+                        "\n\tWhat the Wizard lacks in passive combat abilities, it makes up for in spells." +
+                        "\n\tThe Wizard gains access to Fireball (damaging spell), Mage Armor (shielding ability), Immolate (damage every round), Restoration (healing spell), and Polymorph (lower the enemy level by 3).");
+                System.out.println("# Would you like to choose the Wizard? #\n1. Yes \n2. Back");
+                String input3 = in.nextLine();
+                switch (input3) {
+                    case "1":
+                        playerClass=2;
+                        maxSpellSlots=3;
+                        System.out.println("--------------------------------------------------------------------------------------------------");
+                        break;
+                    case "2":
+                        System.out.println("--------------------------------------------------------------------------------------------------");
+                        break;
+                    default:
+                        System.out.println("\tInvalid command!");
+                        break;
+                }
+                break;
+            case "3":
+                System.out.println("\tThe Rogue is a sneaky dungeon delver, constantly playing in the shadows." +
+                        "\n\tThe Rogue gains damage extra attack damage (faster than the Warrior!), but does not gain as much maximum health as any of the other classes." +
+                        "\n\tThe Rogue has an innate chance to dodge an attack completely, and monsters have a higher chance of dropping a health potion." +
+                        "\n\tThe Rogue gains access to Strike from the Shadows (damaging spell and takes no retaliation damage), Elusive (increases dodge chance), and Sneak Away (can run from a fight).");
+                System.out.println("# Would you like to choose the Rogue? #\n1. Yes \n2. Back");
+                String input4 = in.nextLine();
+                switch (input4) {
+                    case "1":
+                        playerClass=3;
+                        healthPotionDropChance+=15;
+                        dodgeBlockChance+=10;
+                        maxSpellSlots=2;
+                        System.out.println("--------------------------------------------------------------------------------------------------");
+                        break;
+                    case "2":
+                        System.out.println("--------------------------------------------------------------------------------------------------");
+                        break;
+                    default:
+                        System.out.println("\tInvalid command!");
+                        break;
+                }
+                break;
+            case "4":
+                System.out.println("\tThe Archer fires from afar, staying safe for as long as possible." +
+                        "\n\tThe Archer attacks once per battle from afar, taking no retaliation damage." +
+                        "\n\tThe Archer levels up 15% faster." +
+                        "\n\tThe Archer gains access to Poison Arrow (damage every round), Explosive Shot (damaging spell), and Ice Arrow (allows for another attack without retaliation damage).");
+                System.out.println("# Would you like to choose the Archer? #\n1. Yes \n2. Back");
+                String input5 = in.nextLine();
+                switch (input5) {
+                    case "1":
+                        playerClass=4;
+                        maxSpellSlots=2;
+                        System.out.println("--------------------------------------------------------------------------------------------------");
+                        break;
+                    case "2":
+                        System.out.println("--------------------------------------------------------------------------------------------------");
+                        break;
+                    default:
+                        System.out.println("\tInvalid command!");
+                        break;
+                }
+                break;
+            case "5":
+                System.out.println("\tThe Druid is one with nature, transforming into different animals for different benefits for each fight." +
+                        "\n\tThe Druid chooses a form to specialize in every level, increasing their gains in that specific area." +
+                        "\n\tThe Druid gains access to bear form (more maximum health and more damage), Lion form (massive increase in damage), and Owl form (increase in spell damage and potency)." +
+                        "\n\tThe Druid also has access to Rejuvination (healing over time), Solar Flare (damaging spell that does more at the beginning of a fight),"+
+                        " and Moonfire (damaging spell that does more the longer a fight has lasted");
+                System.out.println("# Would you like to choose the Druid? #\n1. Yes \n2. Back");
+                String input6 = in.nextLine();
+                switch (input6) {
+                    case "1":
+                        playerClass=5;
+                        maxSpellSlots=2;
+                        System.out.println("--------------------------------------------------------------------------------------------------");
+                        break;
+                    case "2":
+                        System.out.println("--------------------------------------------------------------------------------------------------");
+                        break;
+                    default:
+                        System.out.println("\tInvalid command!");
+                        break;
+                }
+                break;
+            default:
+                System.out.println("\tInvalid command!");
+                break;
+        }
+        return playerClass;
+    }
     
     public static void levelUp() {
         //<editor-fold desc="LevelUp">
@@ -1365,127 +1511,7 @@ public class TextBased {
 
                 //<editor-fold desc="ClassPick">
                 while (level == 3 && playerClass == 0) {
-                    System.out.println(" # You have reached a level of competency that allows you to choose a class. Choosing one of the below classes locks provides a short description of the class, and is not final. #");
-                    System.out.println("\t1. Warrior");
-                    System.out.println("\t2. Wizard");
-                    System.out.println("\t3. Rogue");
-                    System.out.println("\t4. Archer");
-                    System.out.println("\t5. Druid");
-                    String input = in.nextLine();
-                    switch (input) {
-                        case "1":
-                            System.out.println("\tThe Warrior excels in hand-to hand combat." +
-                                        "\n\tThe Warrior gains extra maximum health and attack damage at every level up. Health potions also heal for more." +
-                                        "\n\tThe Warrior also has a chance to completely block attacks." +
-                                        "\n\tThe Warrior gains access to Lethal Strike (damaging spell), Shield Wall (increases block chance), and Bloodthirst (deal massive damage, take extra damage).");
-                            System.out.println("# Would you like to choose the Warrior? #\n1. Yes \n2. Back");
-                            String input2 = in.nextLine();
-                            switch (input2) {
-                                case "1":
-                                    playerClass=1;
-                                    dodgeBlockChance+=10;
-                                    maxSpellSlots = 2;
-                                    System.out.println("--------------------------------------------------------------------------------------------------");
-                                    break;
-                                case "2":
-                                    System.out.println("--------------------------------------------------------------------------------------------------");
-                                    break;
-                                default:
-                                    System.out.println("\tInvalid command!");
-                                    break;
-                            }
-                            break;
-                        case "2":
-                            System.out.println("\tThe Wizard is a master of the magical arts." +
-                                        "\n\tHealth potions heal for twice as much as usual, but the wizard gains less maximum health per level." +
-                                        "\n\tWhat the Wizard lacks in passive combat abilities, it makes up for in spells." +
-                                        "\n\tThe Wizard gains access to Fireball (damaging spell), Mage Armor (shielding ability), Immolate (damage every round), Restoration (healing spell), and Polymorph (lower the enemy level by 3).");
-                            System.out.println("# Would you like to choose the Wizard? #\n1. Yes \n2. Back");
-                            String input3 = in.nextLine();
-                            switch (input3) {
-                                case "1":
-                                    playerClass=2;
-                                    maxSpellSlots=3;
-                                    System.out.println("--------------------------------------------------------------------------------------------------");
-                                    break;
-                                case "2":
-                                    System.out.println("--------------------------------------------------------------------------------------------------");
-                                    break;
-                                default:
-                                    System.out.println("\tInvalid command!");
-                                    break;
-                            }
-                            break;
-                        case "3":
-                            System.out.println("\tThe Rogue is a sneaky dungeon delver, constantly playing in the shadows." +
-                                        "\n\tThe Rogue gains damage extra attack damage (faster than the Warrior!), but does not gain as much maximum health as any of the other classes." +
-                                        "\n\tThe Rogue has an innate chance to dodge an attack completely, and monsters have a higher chance of dropping a health potion." +
-                                        "\n\tThe Rogue gains access to Strike from the Shadows (damaging spell and takes no retaliation damage), Elusive (increases dodge chance), and Sneak Away (can run from a fight).");
-                            System.out.println("# Would you like to choose the Rogue? #\n1. Yes \n2. Back");
-                            String input4 = in.nextLine();
-                            switch (input4) {
-                                case "1":
-                                    playerClass=3;
-                                    healthPotionDropChance+=15;
-                                    dodgeBlockChance+=10;
-                                    maxSpellSlots=2;
-                                    System.out.println("--------------------------------------------------------------------------------------------------");
-                                    break;
-                                case "2":
-                                    System.out.println("--------------------------------------------------------------------------------------------------");
-                                    break;
-                                default:
-                                    System.out.println("\tInvalid command!");
-                                    break;
-                            }
-                            break;
-                        case "4":
-                            System.out.println("\tThe Archer fires from afar, staying safe for as long as possible." +
-                                        "\n\tThe Archer attacks once per battle from afar, taking no retaliation damage." +
-                                        "\n\tThe Archer levels up 15% faster." +
-                                        "\n\tThe Archer gains access to Poison Arrow (damage every round), Explosive Shot (damaging spell), and Ice Arrow (allows for another attack without retaliation damage).");
-                            System.out.println("# Would you like to choose the Archer? #\n1. Yes \n2. Back");
-                            String input5 = in.nextLine();
-                            switch (input5) {
-                                case "1":
-                                    playerClass=4;
-                                    maxSpellSlots=2;
-                                    System.out.println("--------------------------------------------------------------------------------------------------");
-                                    break;
-                                case "2":
-                                    System.out.println("--------------------------------------------------------------------------------------------------");
-                                    break;
-                                default:
-                                    System.out.println("\tInvalid command!");
-                                    break;
-                            }
-                            break;
-                            case "5":
-                            System.out.println("\tThe Druid is one with nature, transforming into different animals for different benefits for each fight." +
-                                        "\n\tThe Druid chooses a form to specialize in every level, increasing their gains in that specific area." +
-                                        "\n\tThe Druid gains access to bear form (more maximum health and more damage), Lion form (massive increase in damage), and Owl form (increase in spell damage and potency)." + 
-                                        "\n\tThe Druid also has access to Rejuvination (healing over time), Solar Flare (damaging spell that does more at the beginning of a fight),"+
-                                        " and Moonfire (damaging spell that does more the longer a fight has lasted");
-                            System.out.println("# Would you like to choose the Druid? #\n1. Yes \n2. Back");
-                            String input6 = in.nextLine();
-                            switch (input6) {
-                                case "1":
-                                    playerClass=5;
-                                    maxSpellSlots=2;
-                                    System.out.println("--------------------------------------------------------------------------------------------------");
-                                    break;
-                                case "2":
-                                    System.out.println("--------------------------------------------------------------------------------------------------");
-                                    break;
-                                default:
-                                    System.out.println("\tInvalid command!");
-                                    break;
-                            }
-                            break;
-                        default:
-                            System.out.println("\tInvalid command!");
-                            break;
-                    }
+                    playerClass = pickClass();
                 }
                 //</editor-fold>
                 
@@ -1657,9 +1683,13 @@ public class TextBased {
     
     public static void main(String[] args) {
         System.out.println("Welcome to the Dungeon!");
-        
+        //choose difficulty
+        //loop
+        // {
+        //fight (level up?)
+        //shop
+        // }
         chooseDifficulty();
-        experienceNeeded = experienceNeededMultiplier; //300*2^(level-1)
 
         while(running) {
             System.out.println("--------------------------------------------------------------------------------------------------");
